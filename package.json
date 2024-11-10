@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@schedule-x/react": "^2.4.2",
+    "@schedule-x/theme-default": "^2.5.0",
     "antd": "^5.21.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

@@ -1,5 +1,6 @@
 import LoginForm from "./component/Auth/login";
 import Register from "./component/Auth/register";
+import Schedule from "./component/schedule/Schedule";
 import Footer from "./layout/footer";
 import Navbar from "./layout/header";
 import HomePage from "./view/homePage";
@@ -15,6 +16,7 @@ const App = () => {
         <main className="flex-grow mt-16">
           <Routes>
             <Route path={`/`} element={<HomePage />} />
+            <Route path={"/schedule"} element={<Schedule />} />
             <Route path={"/login"} element={<LoginForm />} />
             <Route path={"/register"} element={<Register />} />
           </Routes>
