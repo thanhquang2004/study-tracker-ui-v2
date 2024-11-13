@@ -1,5 +1,6 @@
 import LoginForm from "./component/Auth/login";
 import Register from "./component/Auth/register";
+import QuizPage from "./component/QuizPage/QuizPage";
 import Schedule from "./component/schedule/Schedule";
 import Footer from "./layout/footer";
 import Navbar from "./layout/header";
@@ -19,6 +20,8 @@ const App = () => {
             <Route path={"/schedule"} element={<Schedule />} />
             <Route path={"/login"} element={<LoginForm />} />
             <Route path={"/register"} element={<Register />} />
+            <Route path={"*"} element={<h1>404 Not Found</h1>} />
+            <Route path={"/Quiz"} element={<QuizPage />} />
           </Routes>
         </main>
         <footer className=" drop-shadow">
