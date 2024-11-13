@@ -14,3 +14,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.calender-container {
+  padding: 50px;
+  background-color: aliceblue;
+}
+
+.btn-event {
+  background-color: #086acd;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+}
+.btn-container {
+  margin-bottom: 10px;
+}
