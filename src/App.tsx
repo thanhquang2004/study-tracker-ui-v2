@@ -20,8 +20,8 @@ const App = () => {
             <Route path={"/schedule"} element={<Schedule />} />
             <Route path={"/login"} element={<LoginForm />} />
             <Route path={"/register"} element={<Register />} />
+            <Route path={"/quiz"} element={<QuizPage />} />
             <Route path={"*"} element={<h1>404 Not Found</h1>} />
-            <Route path={"/Quiz"} element={<QuizPage />} />
           </Routes>
         </main>
         <footer className=" drop-shadow">

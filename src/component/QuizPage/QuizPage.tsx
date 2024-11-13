@@ -1,22 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Quiz from "./Quiz/Quiz";
-
-const data = {
-  nextQuestion:
-    "What specific aspects of music performance or composition are you most interested in pursuing?",
-  info: "Specific Musical Goals",
-  suggestAnswer: [
-    {
-      content: "Performance in concerts or recitals",
-    },
-    {
-      content: "Composing original music",
-    },
-    {
-      content: "Both performance and composition",
-    },
-  ],
-};
+import { useGetQuiz } from "../../hooks/useGetQuiz";
+import LoadingScreen from "../Loader/Loader";
+import router from "../Route";
+import { useNavigate } from "react-router-dom";
 
 const firstQuestion = {
   nextQuestion: "What do you want to study?",
@@ -25,7 +12,7 @@ const firstQuestion = {
 };
 
 const lastQuestion = {
-  nextQuestion: "What is your goal?",
+  nextQuestion: "How long do you want to do it?",
   info: "Goal",
   suggestAnswer: [],
 };
@@ -34,18 +21,35 @@ function QuizPage() {
   const [questionPage, setQuestionPage] = useState(0);
   const [infos, setInfos] = useState("");
   const [goal, setGoal] = useState("");
+  const navigate = useNavigate();
+
+  const { GetQuestion, data, isLoading } = useGetQuiz();
 
   const onSubmit = async (info: string, answer: string) => {
+    console.log(info);
+    console.log(answer);
+    if (questionPage === 0) {
+      setGoal(answer);
+    }
     const newInfo = `${info}: ${answer}`;
-    setInfos(`${infos} ;${newInfo}`);
+    setInfos(`${infos} ${newInfo};`);
 
     const req = {
       goal: goal,
-      info: infos,
+      info: `${infos} ${newInfo}`,
     };
+    console.log(req);
+
+    await GetQuestion(req);
 
     setQuestionPage(questionPage + 1);
   };
+
+  if (isLoading) return <LoadingScreen />;
+
+  if (questionPage < 6) {
+    navigate("/quiz");
+  }
 
   return (
     <div className="w-full bg-white h-[100vh]">
@@ -54,7 +58,7 @@ function QuizPage() {
       ) : questionPage === 5 ? (
         <Quiz quiz={lastQuestion} onSubmit={onSubmit} />
       ) : (
-        <Quiz quiz={data} onSubmit={onSubmit} />
+        <Quiz quiz={data!} onSubmit={onSubmit} />
       )}
     </div>
   );
