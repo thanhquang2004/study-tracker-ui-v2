@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import Quiz from "./Quiz/Quiz";
 import { useGetQuiz } from "../../hooks/useGetQuiz";
 import LoadingScreen from "../Loader/Loader";
-import router from "../Route";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const firstQuestion = {
   nextQuestion: "What do you want to study?",
