@@ -3,6 +3,7 @@ import { useGetQuiz } from "../../hooks/useGetQuiz";
 import LoadingScreen from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useGetRoadmap } from "../../hooks/useGetRoadmap";
 
 const firstQuestion = {
   nextQuestion: "What do you want to study?",
@@ -23,6 +24,7 @@ function QuizPage() {
   const navigate = useNavigate();
 
   const { GetQuestion, data, isLoading } = useGetQuiz();
+  const { GetRoadmap, roadmapData, roadmapIsLoading } = useGetRoadmap();
 
   const onSubmit = async (info: string, answer: string) => {
     console.log(info);
@@ -39,15 +41,23 @@ function QuizPage() {
     };
     console.log(req);
 
+    if (questionPage === 6) {
+      await GetRoadmap(req);
+    }
+
     await GetQuestion(req);
 
     setQuestionPage(questionPage + 1);
   };
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading || roadmapIsLoading) return <LoadingScreen />;
 
   if (questionPage < 6) {
     navigate("/quiz");
+  }
+
+  if (roadmapData) {
+    navigate(`/roadmap/${roadmapData.id}`);
   }
 
   return (
