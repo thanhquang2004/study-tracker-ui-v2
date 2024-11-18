@@ -1,5 +1,9 @@
 export type RoadmapData = {
+  id: string;
+  userId: string;
   title: string;
+  createdAt: string;
+  updatedAt: string;
   stages: Stage[];
 };
 

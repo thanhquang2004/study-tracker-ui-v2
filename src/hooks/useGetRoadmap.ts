@@ -1,30 +1,31 @@
 import axios from "axios";
 import { useState } from "react";
+import { RoadmapData } from "../types/RoadmapData.type";
 
 interface GetRoadmapRequest {
   info: string;
 }
 
-const useGetQuiz = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState();
+const useGetRoadmap = () => {
+  const [roadmapIsLoading, setRoadmapIsLoading] = useState(false);
+  const [roadmapData, setRoadmapData] = useState<RoadmapData>();
 
-  const GetQuestion = async (request: GetRoadmapRequest) => {
-    setIsLoading(true);
+  const GetRoadmap = async (request: GetRoadmapRequest) => {
+    setRoadmapIsLoading(true);
     try {
       const respone = await axios.post(
         "http://localhost:3000/generateRoadmap",
         request
       );
 
-      setData(respone.data);
-      setIsLoading(false);
+      setRoadmapData(respone.data);
+      setRoadmapIsLoading(false);
     } catch (error) {
       console.log(error);
       throw error;
     }
   };
-  return { GetQuestion, isLoading, data };
+  return { GetRoadmap, roadmapIsLoading, roadmapData };
 };
 
-export { useGetQuiz };
+export { useGetRoadmap };
