@@ -1,56 +1,79 @@
-import { Button, Form, Input, message } from "antd";
-import React from "react";
-import type { ValidateErrorEntity } from "rc-field-form/lib/interface";
+import { Button, Form, Input, notification } from "antd";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ILoginForm } from "../apis/AUsers/Auth/Auth.interface";
+import authApi from "../apis/AUsers/Auth/Auth.api";
 
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
+  const [notify, notifyContext] = notification.useNotification();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onFinish = (values: { email: string; password: string }) => {
-    console.log("Đăng nhập với:", values);
-    message.success("Đăng nhập thành công!");
-    navigate("/");
+  const handleLogin = async (values: ILoginForm) => {
+    try {
+      setIsLoading(true);
+      console.log("Login values:", values);
+
+      const response = await authApi.userLogin(values);
+
+      // Lưu token trong localStorage
+      localStorage.setItem("accessToken", response.result.token);
+      localStorage.setItem("expiryTime", response.result.expiryTime);
+
+      notify.success({
+        message: "Đăng nhập thành công",
+      });
+
+      navigate("/");
+    } catch (error) {
+      notify.error({
+        message: "Đăng nhập thất bại",
+        description: "Tài khoản hoặc mật khẩu không đúng",
+      });
+    }
+    setIsLoading(false);
   };
 
-  const onFinishFailed = (error: ValidateErrorEntity) => {
-    console.log("Failed:", error);
+  const checkTokenExpiry = () => {
+    const expiryTime = localStorage.getItem("expiryTime");
+    if (expiryTime && new Date(expiryTime) < new Date()) {
+      localStorage.clear();
+      notify.warning({
+        message: "Phiên đăng nhập đã hết hạn",
+        description: "Vui lòng đăng nhập lại.",
+      });
+      navigate("/login");
+    }
   };
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  useEffect(() => {
+    checkTokenExpiry();
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-500 to-teal-300 p-4">
-      <div className="bg-white bg-opacity-90 p-10 rounded-3xl shadow-2xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-700">
-          Đăng Nhập
-        </h2>
-
+      <div className="bg-white bg-opacity-90 p-10 rounded-3xl shadow-2xl w-full  max-w-xl">
+        <h2 className="text-3xl font-bold text-center mb-6 ">Đăng Nhập</h2>
+        {notifyContext}
         <Form
           name="login"
           layout="vertical"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+          onFinish={handleLogin}
           className="space-y-5"
         >
           <Form.Item
-            label={<span className="text-gray-600 font-medium">Email</span>}
-            name="email"
-            rules={[
-              { required: true, message: "Vui lòng nhập địa chỉ email!" },
-              {
-                pattern: emailRegex,
-                message: "Email phải là định dạng '@gmail.com'!",
-              },
-            ]}
+            label={<span className=" font-medium">Username</span>}
+            name="username"
+            rules={[{ required: true, message: "Vui lòng nhập username!" }]}
           >
             <Input
-              placeholder="you@gmail.com"
+              placeholder="username"
               size="large"
               className="rounded-full"
             />
           </Form.Item>
           <Form.Item
-            label={<span className="text-gray-600 font-medium">Mật Khẩu</span>}
+            label={<span className=" font-medium">Mật Khẩu</span>}
             name="password"
             rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
           >
@@ -66,7 +89,8 @@ const LoginForm: React.FC = () => {
               htmlType="submit"
               block
               size="large"
-              className="bg-blue-600 hover:bg-purple-700 text-white rounded-full "
+              loading={isLoading}
+              className="bg-blue-600  text-white rounded-full "
             >
               Đăng Nhập
             </Button>
