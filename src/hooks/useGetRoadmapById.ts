@@ -1,22 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
+import { RoadmapData } from "../types/RoadmapData.type";
 
-
-interface GetQuestionRequest {
-  goal: string;
-  info: string;
-}
-
-const useGetQuiz = () => {
+const useGetRoadmapById = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState<RoadmapData>();
 
-  const GetQuestion = async (request: GetQuestionRequest) => {
+  const GetRoadmapById = async (id: string) => {
     setIsLoading(true);
     try {
       const respone = await axios.post(
-        "http://localhost:3000/generateQuestion",
-        request
+        `http://localhost:3000/getRoadmap/${id}`
       );
 
       setData(respone.data);
@@ -26,7 +20,7 @@ const useGetQuiz = () => {
       throw error;
     }
   };
-  return { GetQuestion, isLoading, data };
+  return { GetRoadmapById, isLoading, data };
 };
 
-export { useGetQuiz };
+export { useGetRoadmapById };
