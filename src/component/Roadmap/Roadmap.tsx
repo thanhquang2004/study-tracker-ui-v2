@@ -9,7 +9,6 @@ function Roadmap() {
   const { GetRoadmapById, data, isLoading } = useGetRoadmapById();
   const [isReady, setIsReady] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getRoadmap = async () => {
     return await GetRoadmapById(id!);
   };
@@ -23,7 +22,8 @@ function Roadmap() {
     } finally {
       setIsReady(false);
     }
-  }, [getRoadmap]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading || isReady) return <LoadingScreen />;
 

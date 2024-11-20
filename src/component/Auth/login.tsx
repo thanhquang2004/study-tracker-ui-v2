@@ -26,6 +26,7 @@ const LoginForm: React.FC = () => {
 
       navigate("/");
     } catch (error) {
+      console.log(error);
       notify.error({
         message: "Đăng nhập thất bại",
         description: "Tài khoản hoặc mật khẩu không đúng",

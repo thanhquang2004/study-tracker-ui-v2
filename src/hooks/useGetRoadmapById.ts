@@ -5,12 +5,19 @@ import { RoadmapData } from "../types/RoadmapData.type";
 const useGetRoadmapById = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<RoadmapData>();
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  };
 
   const GetRoadmapById = async (id: string) => {
     setIsLoading(true);
     try {
-      const respone = await axios.post(
-        `http://localhost:3000/getRoadmap/${id}`
+      const respone = await axios.get(
+        `http://localhost:3000/getRoadmap/${id}`,
+        config
       );
 
       setData(respone.data);

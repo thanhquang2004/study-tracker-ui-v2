@@ -9,13 +9,21 @@ interface GetRoadmapRequest {
 const useGetRoadmap = () => {
   const [roadmapIsLoading, setRoadmapIsLoading] = useState(false);
   const [roadmapData, setRoadmapData] = useState<RoadmapData>();
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  };
+
 
   const GetRoadmap = async (request: GetRoadmapRequest) => {
     setRoadmapIsLoading(true);
     try {
       const respone = await axios.post(
         "http://localhost:3000/generateRoadmap",
-        request
+        request,
+        config
       );
 
       setRoadmapData(respone.data);

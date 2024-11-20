@@ -41,7 +41,7 @@ function QuizPage() {
     };
     console.log(req);
 
-    if (questionPage === 6) {
+    if (questionPage === 5) {
       await GetRoadmap(req);
     }
 
@@ -49,22 +49,23 @@ function QuizPage() {
 
     setQuestionPage(questionPage + 1);
   };
+  console.log(questionPage);
 
   if (isLoading || roadmapIsLoading) return <LoadingScreen />;
 
-  if (questionPage < 6) {
-    navigate("/quiz");
-  }
-
   if (roadmapData) {
     navigate(`/roadmap/${roadmapData.id}`);
+  }
+
+  if (questionPage < 5) {
+    navigate("/quiz");
   }
 
   return (
     <div className="w-full bg-white h-[100vh]">
       {questionPage === 0 ? (
         <Quiz quiz={firstQuestion} onSubmit={onSubmit} />
-      ) : questionPage === 5 ? (
+      ) : questionPage === 4 ? (
         <Quiz quiz={lastQuestion} onSubmit={onSubmit} />
       ) : (
         <Quiz quiz={data!} onSubmit={onSubmit} />
