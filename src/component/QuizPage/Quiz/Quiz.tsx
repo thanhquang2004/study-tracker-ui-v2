@@ -28,6 +28,10 @@ function Quiz(quizProp: QuizProps) {
               fontWeight: "bold",
               textAlign: "center",
               marginBottom: "20px",
+              wordBreak: "break-word",
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
             }}
           >
             {quizProp.quiz.nextQuestion}
