@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 export default function Component() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
       <motion.div
         className="relative w-32 h-32 mb-8"
         animate={{
@@ -17,7 +17,7 @@ export default function Component() {
         {[...Array(3)].map((_, i) => (
           <motion.span
             key={i}
-            className="absolute inset-0 rounded-full border-2 border-primary"
+            className="absolute inset-0 rounded-full border-2 border-black"
             style={{
               opacity: 0.2 + i * 0.2,
             }}
@@ -34,7 +34,7 @@ export default function Component() {
           />
         ))}
         <motion.span
-          className="absolute inset-0 rounded-full bg-primary"
+          className="absolute inset-0 rounded-full bg-black"
           animate={{
             scale: [0.8, 1, 0.8],
             opacity: [0.6, 0.8, 0.6],
@@ -47,7 +47,7 @@ export default function Component() {
         />
       </motion.div>
       <motion.p
-        className="text-xl text-primary font-medium mb-4"
+        className="text-xl text-black font-medium mb-4"
         animate={{
           opacity: [0.5, 1, 0.5],
         }}
@@ -60,7 +60,7 @@ export default function Component() {
         It will take a few minutes
       </motion.p>
       <motion.div
-        className="bg-primary/10 rounded-lg p-4 max-w-md"
+        className="bg-black/10 rounded-lg p-4 max-w-md"
         animate={{
           scale: [1, 1.02, 1],
         }}
@@ -70,7 +70,7 @@ export default function Component() {
           ease: "easeInOut",
         }}
       >
-        <p className="text-sm text-center text-primary/80">
+        <p className="text-sm text-center text-black/80">
           We're preparing something amazing for you. Thank you for your patience!
         </p>
       </motion.div>
