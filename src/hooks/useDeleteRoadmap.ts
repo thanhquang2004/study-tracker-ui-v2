@@ -2,9 +2,9 @@ import axios from "axios";
 import { useState } from "react";
 import { RoadmapData } from "../types/RoadmapData.type";
 
-const useGetRoadmaps = () => {
+const useDeleteRoadmapById = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<RoadmapData[]>();
+  const [data, setData] = useState<RoadmapData>();
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -12,11 +12,11 @@ const useGetRoadmaps = () => {
     },
   };
 
-  const GetRoadmaps = async () => {
+  const DeleteRoadmapById = async (id: string) => {
     setIsLoading(true);
     try {
-      const respone = await axios.get(
-        `http://localhost:3000/getRoadmaps`,
+      const respone = await axios.delete(
+        `http://localhost:3000/deleteRoadmap/${id}`,
         config
       );
 
@@ -27,7 +27,7 @@ const useGetRoadmaps = () => {
       throw error;
     }
   };
-  return { GetRoadmaps, isLoading, data };
+  return { DeleteRoadmapById, isLoading, data };
 };
 
-export { useGetRoadmaps };
+export { useDeleteRoadmapById };

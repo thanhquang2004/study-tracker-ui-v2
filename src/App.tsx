@@ -2,6 +2,7 @@ import LoginForm from "./component/Auth/login";
 import Register from "./component/Auth/register";
 import QuizPage from "./component/QuizPage/QuizPage";
 import Roadmap from "./component/Roadmap/Roadmap";
+import Roadmaps from "./component/Roadmap/Roadmaps";
 import Schedule from "./component/schedule/Schedule";
 import Footer from "./layout/footer";
 import Navbar from "./layout/header";
@@ -24,6 +25,7 @@ const App = () => {
             <Route path={"/quiz"} element={<QuizPage />} />
             <Route path={"/roadmap/:id"} element={<Roadmap />} />
             <Route path={"*"} element={<h1>404 Not Found</h1>} />
+            <Route path={"/roadmaps"} element={<Roadmaps />} />
           </Routes>
         </main>
         <footer className=" drop-shadow">
