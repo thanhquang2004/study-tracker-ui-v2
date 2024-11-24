@@ -1,5 +1,5 @@
 import { apiService } from "../../../../config/apiService";
-import { IRegister, ILoginForm, ApiResponse } from "./Auth.interface";
+import { IRegister, ILoginForm, ApiResponse, IUser } from "./Auth.interface";
 
 export default {
   userRegister(data: IRegister): Promise<{ message: string }> {
@@ -16,6 +16,16 @@ export default {
       .post("/identity/auth/token", data)
 
       .then((response) => {
+        console.log("Dữ liệu gửi tới API:", data);
+        return response.data;
+      });
+  },
+  getUserinfo(): Promise<IUser> {
+    return apiService
+      .get("/identity/users/my-info")
+
+      .then((response) => {
+        console.log("userid:", response.data.result.id);
         return response.data;
       });
   },

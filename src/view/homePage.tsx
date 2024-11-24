@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 export default function Home() {
   return (
@@ -115,14 +115,6 @@ export default function Home() {
           </div>
         </section>
       </Content>
-
-      <Footer className="bg-gray-800 text-white py-8">
-        <div className="container mx-auto px-4 text-center">
-          <Paragraph className="m-0">
-            &copy; 2023 Generate Roadmap. All rights reserved.
-          </Paragraph>
-        </div>
-      </Footer>
     </Layout>
   );
 }

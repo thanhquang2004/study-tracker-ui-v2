@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const apiService = axios.create({
-  baseURL: `http://localhost:8080`,
+  baseURL: `http://localhost:8888/api/v1`,
   timeout: 1200000,
   headers: {
     "Content-Type": "application/json",
@@ -46,7 +46,7 @@ apiService.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       localStorage.removeItem("accessToken");
-      localStorage.removeItem("fullName");
+      localStorage.removeItem("username");
       localStorage.removeItem("id");
     }
     return Promise.reject(error);

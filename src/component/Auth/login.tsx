@@ -19,12 +19,12 @@ const LoginForm: React.FC = () => {
       // Lưu token trong localStorage
       localStorage.setItem("accessToken", response.result.token);
       localStorage.setItem("expiryTime", response.result.expiryTime);
+      localStorage.setItem("username", values.username);
 
       notify.success({
         message: "Đăng nhập thành công",
       });
-
-      navigate("/");
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
       notify.error({
