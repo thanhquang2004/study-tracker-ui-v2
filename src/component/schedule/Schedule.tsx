@@ -6,30 +6,18 @@ import "../../index.css";
 import Sidebar from "./Sidebar/Sidebar";
 import ScheduleApi from "../apis/AUsers/Schedule/Schedule.api";
 import { IEvent } from "../apis/AUsers/Schedule/Schedule.interface";
-import loginApi from "../apis/AUsers/Auth/Auth.api";
 const localizer = momentLocalizer(moment);
 
 const Schedule: React.FC = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await loginApi.getUserinfo();
-      setUserId(userInfo.result.id);
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
 
   const getSchedule = async () => {
-    if (!userId) {
-      console.error("User not found, unable to create event");
-      return;
-    }
     try {
+      const userId = localStorage.getItem("userId");
+      if (userId === null) return;
+
       const response = await ScheduleApi.getScheduleById(userId);
 
       const formattedEvents = response.map((event: IEvent) => ({
@@ -44,14 +32,8 @@ const Schedule: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUserInfo();
+    getSchedule();
   }, []);
-
-  useEffect(() => {
-    if (userId) {
-      getSchedule();
-    }
-  }, [userId]);
 
   const toggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);

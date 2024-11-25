@@ -21,6 +21,9 @@ const LoginForm: React.FC = () => {
       localStorage.setItem("expiryTime", response.result.expiryTime);
       localStorage.setItem("username", values.username);
 
+      const userId = await authApi.getUserinfo();
+      localStorage.setItem("userId", userId.result.id);
+
       notify.success({
         message: "Đăng nhập thành công",
       });

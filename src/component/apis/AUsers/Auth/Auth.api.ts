@@ -29,4 +29,13 @@ export default {
         return response.data;
       });
   },
+  getUserId(userId: string): Promise<IUser> {
+    return apiService
+      .get(`/profile/users/${userId}`)
+
+      .then((response) => {
+        console.log("userprofile:", response.data.result.id);
+        return response.data;
+      });
+  },
 };

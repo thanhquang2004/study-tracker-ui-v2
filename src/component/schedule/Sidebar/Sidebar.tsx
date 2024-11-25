@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IEvent } from "../../apis/AUsers/Schedule/Schedule.interface";
 import ScheduleApi from "../../apis/AUsers/Schedule/Schedule.api";
-import loginApi from "../../apis/AUsers/Auth/Auth.api";
 
 const PASTEL_COLORS = [
   "#F7A8C2",
@@ -32,20 +31,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [category, setCategory] = useState("");
   const [roadmapId, setRoadmapId] = useState("");
   const [color, setColor] = useState<string>(PASTEL_COLORS[0]);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await loginApi.getUserinfo();
-      setUserId(userInfo.result.id);
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
 
   useEffect(() => {
     if (selectedEvent) {
@@ -62,10 +47,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, [selectedEvent]);
 
   const handleSubmit = async () => {
-    if (!userId) {
-      console.error("User not found, unable to create event");
-      return;
-    }
+    const userId = localStorage.getItem("userId");
+    if (userId === null) return;
 
     const validColor = PASTEL_COLORS.includes(color) ? color : PASTEL_COLORS[0];
     const newEvent: IEvent = {

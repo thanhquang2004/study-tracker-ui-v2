@@ -74,7 +74,9 @@ const Navbar: React.FC = () => {
                   fontWeight: "bold",
                 }}
               >
-                <span className="font-bold">Hello, {username}</span>
+                <Link to="/userProfile">
+                  <span className="font-bold">Hello, {username}</span>
+                </Link>
               </Menu.Item>
               <Menu.Item
                 icon={<LogoutOutlined />}
