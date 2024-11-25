@@ -14,10 +14,13 @@ const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
 
   const getSchedule = async () => {
-    try {
-      const userId = localStorage.getItem("userId");
-      if (userId === null) return;
+    const userId = localStorage.getItem("userId");
 
+    if (!userId) {
+      alert("Hãy đăng nhập để sử dụng chức năng này.");
+      return;
+    }
+    try {
       const response = await ScheduleApi.getScheduleById(userId);
 
       const formattedEvents = response.map((event: IEvent) => ({
@@ -32,7 +35,10 @@ const Schedule: React.FC = () => {
   };
 
   useEffect(() => {
-    getSchedule();
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      getSchedule();
+    }
   }, []);
 
   const toggleOffcanvas = () => {
@@ -60,6 +66,8 @@ const Schedule: React.FC = () => {
         <button
           className="btn-event hover:bg-sky-800"
           onClick={() => {
+            const userId = localStorage.getItem("userId");
+
             if (!userId) {
               alert("Hãy đăng nhập để sử dụng chức năng này.");
               return;
