@@ -2,7 +2,7 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background-color: #f0f8ff;
+  background-color: #fff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -60,5 +60,5 @@
 }
 
 .rbc-event:hover {
-  background-color: #ffcc80; /* Thêm hiệu ứng hover cho sự kiện */
+  background-color: #142596; /* Thêm hiệu ứng hover cho sự kiện */
 }

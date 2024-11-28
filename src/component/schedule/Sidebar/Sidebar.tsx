@@ -15,82 +15,90 @@ type SidebarProps = {
   show: boolean;
   onHide: () => void;
   selectedEvent: IEvent | null;
-  refreshEvents: () => void;
+  refreshEvent: () => void;
+};
+
+const initialFormState = {
+  title: "",
+  description: "",
+  startDate: "",
+  endDate: "",
+  category: "",
+  roadmapId: "",
+  color: PASTEL_COLORS[0],
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
   show,
   onHide,
   selectedEvent,
-  refreshEvents,
+  refreshEvent,
 }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [category, setCategory] = useState("");
-  const [roadmapId, setRoadmapId] = useState("");
-  const [color, setColor] = useState<string>(PASTEL_COLORS[0]);
+  const [formData, setFormData] = useState(initialFormState);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (selectedEvent) {
-      setTitle(selectedEvent.title);
-      setDescription(selectedEvent.description);
-      setStartDate(new Date(selectedEvent.start).toISOString().split("T")[0]);
-      setEndDate(new Date(selectedEvent.end).toISOString().split("T")[0]);
-      setCategory(selectedEvent.category);
-      setRoadmapId(selectedEvent.roadmapId);
-      setColor(selectedEvent.color);
+      setFormData({
+        title: selectedEvent.title,
+        description: selectedEvent.description,
+        startDate: new Date(selectedEvent.start).toISOString().split("T")[0],
+        endDate: new Date(selectedEvent.end).toISOString().split("T")[0],
+        category: selectedEvent.category,
+        roadmapId: selectedEvent.roadmapId,
+        color: selectedEvent.color,
+      });
     } else {
-      resetForm();
+      setFormData(initialFormState);
     }
   }, [selectedEvent]);
 
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleSubmit = async () => {
     const userId = localStorage.getItem("userId");
-    if (userId === null) return;
+    if (!userId) return;
 
-    const validColor = PASTEL_COLORS.includes(color) ? color : PASTEL_COLORS[0];
-    const newEvent: IEvent = {
-      id: selectedEvent
-        ? selectedEvent.id
-        : Math.floor(Math.random() * 1000000),
-      userId: userId,
-      title,
-      description,
-      start: startDate,
-      end: endDate,
+    const validColor = PASTEL_COLORS.includes(formData.color)
+      ? formData.color
+      : PASTEL_COLORS[0];
+
+    const eventData: IEvent = {
+      id: selectedEvent ? selectedEvent.id : "",
+      userId,
+      ...formData,
+      start: formData.startDate,
+      end: formData.endDate,
       allDay: true,
       type: "default",
       status: "active",
-      category,
-      roadmapId,
       color: validColor,
     };
 
+    if (isLoading) return;
+    setIsLoading(true);
     try {
-      if (selectedEvent) {
-        await ScheduleApi.updateSchedule(selectedEvent.id, newEvent);
+      if (selectedEvent?.id !== undefined) {
+        await ScheduleApi.updateSchedule(selectedEvent.id, eventData);
       } else {
-        await ScheduleApi.createSchedule(newEvent);
+        await ScheduleApi.createSchedule(eventData);
       }
 
-      refreshEvents();
+      refreshEvent();
       onHide();
-      resetForm();
+      setFormData(initialFormState);
     } catch (error) {
       console.error("Error creating/updating event:", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setStartDate("");
-    setEndDate("");
-    setCategory("");
-    setRoadmapId("");
-    setColor(PASTEL_COLORS[0]);
   };
 
   const handleDelete = async () => {
@@ -98,14 +106,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       console.error("No event selected to delete");
       return;
     }
-
-    try {
-      await ScheduleApi.deleteCategory(selectedEvent.id);
-      console.log("Event deleted successfully");
-      refreshEvents();
-      onHide();
-    } catch (error) {
-      console.error("Error deleting event:", error);
+    if (window.confirm("Bạn có chắc muốn xóa sự kiện này không?")) {
+      try {
+        await ScheduleApi.deleteSchedule(selectedEvent.id!);
+        console.log("Event deleted successfully");
+        refreshEvent();
+        onHide();
+      } catch (error) {
+        console.error("Error deleting event:", error);
+      }
     }
   };
   if (!show) return null;
@@ -126,16 +135,18 @@ const Sidebar: React.FC<SidebarProps> = ({
             <label className="block font-medium mb-1">Title</label>
             <input
               type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2"
             />
           </div>
           <div>
             <label className="block font-medium mb-1">Description</label>
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={formData.description}
+              name="description"
+              onChange={handleChange}
               rows={3}
               className="w-full border border-gray-300 rounded-lg p-2"
             ></textarea>
@@ -145,8 +156,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               <label className="block font-medium mb-1">Start Date</label>
               <input
                 type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-2"
               />
             </div>
@@ -154,8 +166,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               <label className="block font-medium mb-1">End Date</label>
               <input
                 type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg p-2"
               />
             </div>
@@ -167,10 +180,16 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <div
                   key={colorOption}
                   className={`w-8 h-8 rounded-full cursor-pointer border ${
-                    color === colorOption ? "border-black" : "border-gray-300"
+                    formData.color === colorOption
+                      ? "border-black"
+                      : "border-gray-300"
                   }`}
                   style={{ backgroundColor: colorOption }}
-                  onClick={() => setColor(colorOption)}
+                  onClick={() =>
+                    handleChange({
+                      target: { name: "color", value: colorOption },
+                    } as React.ChangeEvent<HTMLInputElement>)
+                  }
                 ></div>
               ))}
             </div>
@@ -180,8 +199,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           <button
             className="bg-blue-600 text-white py-2 px-4 rounded-lg flex-1"
             onClick={handleSubmit}
+            disabled={isLoading}
           >
-            {selectedEvent ? "Update" : "Submit"}
+            {isLoading ? "Processing..." : selectedEvent ? "Update" : "Submit"}
           </button>
           {selectedEvent && (
             <button

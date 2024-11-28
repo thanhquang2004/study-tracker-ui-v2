@@ -8,6 +8,8 @@ import {
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
+import Pic2 from "../assets/image.png";
+
 const { Title, Paragraph } = Typography;
 const { Content } = Layout;
 
@@ -70,27 +72,32 @@ export default function Home() {
         {/* Image Showcase */}
         <section className="bg-gray-100 py-20">
           <div className="container mx-auto px-4">
+            {/* Tiêu đề */}
             <Title
               level={2}
-              className="text-3xl md:text-4xl font-bold text-center mb-12"
+              className="text-3xl md:text-4xl font-extrabold text-center mb-16 text-gray-800"
             >
-              Visualize Your Learning Journey
+              Create A Schedule That Suits You
             </Title>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <Image
-                src="/placeholder.svg?height=300&width=400"
-                alt="Sample roadmap visualization"
-                width={400}
-                height={300}
-                className="rounded-lg shadow-md w-full"
-              />
-              <Image
-                src="/placeholder.svg?height=300&width=400"
-                alt="User dashboard example"
-                width={400}
-                height={300}
-                className="rounded-lg shadow-md w-full"
-              />
+
+            {/* Bố cục lưới cho hình ảnh */}
+            <div className="flex justify-center items-center">
+              <div className="relative">
+                <Image
+                  src={Pic2}
+                  alt="User Calendar example"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg w-full h-auto object-contain "
+                />
+              </div>
+            </div>
+
+            {/* Nút hành động */}
+            <div className="mt-12 text-center">
+              <button className="px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-full hover:bg-blue-700 transition">
+                <Link to="/schedule">Get Started</Link>
+              </button>
             </div>
           </div>
         </section>

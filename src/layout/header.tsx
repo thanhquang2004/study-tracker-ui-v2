@@ -31,6 +31,7 @@ const Navbar: React.FC = () => {
       localStorage.removeItem("username");
       localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       localStorage.removeItem("expiryTime");
       window.location.href = "/login";
     }

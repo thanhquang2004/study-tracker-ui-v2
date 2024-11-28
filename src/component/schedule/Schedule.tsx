@@ -17,24 +17,28 @@ const Schedule: React.FC = () => {
     const userId = localStorage.getItem("userId");
 
     if (!userId) {
-      alert("Hãy đăng nhập để sử dụng chức năng này.");
       return;
     }
     try {
+      console.log(userId);
       const response = await ScheduleApi.getScheduleById(userId);
+      console.log("API Response:", response);
 
       const formattedEvents = response.map((event: IEvent) => ({
         ...event,
         start: new Date(event.start),
         end: new Date(event.end),
       }));
-      setEvents(formattedEvents);
+      console.log("Formatted Events:", formattedEvents);
+
+      setEvents([...formattedEvents]);
     } catch (error) {
       console.error("Error fetching schedules:", error);
     }
   };
 
   useEffect(() => {
+    console.log("useEffect triggered");
     const userId = localStorage.getItem("userId");
     if (userId) {
       getSchedule();
@@ -82,7 +86,7 @@ const Schedule: React.FC = () => {
           show={showOffcanvas}
           onHide={toggleOffcanvas}
           selectedEvent={selectedEvent}
-          refreshEvents={getSchedule}
+          refreshEvent={getSchedule}
         />
       </div>
       <Calendar

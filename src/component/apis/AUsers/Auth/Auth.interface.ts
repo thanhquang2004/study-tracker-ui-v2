@@ -34,8 +34,8 @@ export interface IUser {
   result: {
     id: string;
     username: string;
-    dob: string | null;
-    email: string;
+    dob?: string | null;
+    email?: string;
     emailVerified: boolean;
     password: string;
     name: string | null;
@@ -43,5 +43,10 @@ export interface IUser {
     age: number | null;
     occupation: string | null;
     roles: Role[];
+    active: boolean;
   };
+}
+export interface IUserResponse {
+  code: number;
+  result: IUser[];
 }
