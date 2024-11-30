@@ -18,13 +18,26 @@ const LoginForm: React.FC = () => {
 
       // Lưu token trong localStorage
       localStorage.setItem("accessToken", response.result.token);
+      localStorage.setItem("refreshToken", response.result.token);
       localStorage.setItem("expiryTime", response.result.expiryTime);
       localStorage.setItem("username", values.username);
+
+      const userId = await authApi.getUserinfo();
+      localStorage.setItem("userId", userId.result.id);
+      localStorage.setItem("roles", JSON.stringify(userId.result.roles));
 
       notify.success({
         message: "Đăng nhập thành công",
       });
-      window.location.href = "/";
+      const roles = userId.result.roles;
+      const isAdmin = roles.some((role) => role.name === "ADMIN");
+      console.log(isAdmin);
+
+      if (isAdmin) {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/";
+      }
     } catch (error) {
       console.log(error);
       notify.error({

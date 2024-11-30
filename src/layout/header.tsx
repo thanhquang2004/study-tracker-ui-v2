@@ -5,28 +5,21 @@ import {
   LogoutOutlined,
   PieChartOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const { Header } = Layout;
 
 const Navbar: React.FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const [username, setUsername] = useState<string | null>(null);
   const [selectedKey, setSelectedKey] = useState<string>("");
 
   useEffect(() => {
     const savedUsername = localStorage.getItem("username");
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      navigate("/login");
-    } else {
-      setUsername(savedUsername);
-    }
-  }, [navigate]);
+    setUsername(savedUsername);
+  }, []);
 
   useEffect(() => {
-    // Cập nhật selectedKey khi URL thay đổi
     const currentPath = location.pathname;
     setSelectedKey(currentPath);
   }, [location]);
@@ -36,9 +29,11 @@ const Navbar: React.FC = () => {
 
     if (confirmLogout) {
       localStorage.removeItem("username");
-      localStorage.removeItem("id");
+      localStorage.removeItem("userId");
       localStorage.removeItem("accessToken");
-      navigate("/login");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("expiryTime");
+      window.location.href = "/login";
     }
   };
 
@@ -74,7 +69,9 @@ const Navbar: React.FC = () => {
                   fontWeight: "bold",
                 }}
               >
-                <span className="font-bold">Hello, {username}</span>
+                <Link to="/userProfile">
+                  <span className="font-bold">Hello, {username}</span>
+                </Link>
               </Menu.Item>
               <Menu.Item
                 icon={<LogoutOutlined />}

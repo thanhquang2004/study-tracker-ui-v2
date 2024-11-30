@@ -6,52 +6,44 @@ import "../../index.css";
 import Sidebar from "./Sidebar/Sidebar";
 import ScheduleApi from "../apis/AUsers/Schedule/Schedule.api";
 import { IEvent } from "../apis/AUsers/Schedule/Schedule.interface";
-import loginApi from "../apis/AUsers/Auth/Auth.api";
 const localizer = momentLocalizer(moment);
 
 const Schedule: React.FC = () => {
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null);
-  const [userId, setUserId] = useState<string | null>(null);
-
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await loginApi.getUserinfo();
-      setUserId(userInfo.result.id);
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
 
   const getSchedule = async () => {
+    const userId = localStorage.getItem("userId");
+
     if (!userId) {
-      console.error("User not found, unable to create event");
       return;
     }
     try {
+      console.log(userId);
       const response = await ScheduleApi.getScheduleById(userId);
+      console.log("API Response:", response);
 
       const formattedEvents = response.map((event: IEvent) => ({
         ...event,
         start: new Date(event.start),
         end: new Date(event.end),
       }));
-      setEvents(formattedEvents);
+      console.log("Formatted Events:", formattedEvents);
+
+      setEvents([...formattedEvents]);
     } catch (error) {
       console.error("Error fetching schedules:", error);
     }
   };
 
   useEffect(() => {
-    fetchUserInfo();
-  }, []);
-
-  useEffect(() => {
+    console.log("useEffect triggered");
+    const userId = localStorage.getItem("userId");
     if (userId) {
       getSchedule();
     }
-  }, [userId]);
+  }, []);
 
   const toggleOffcanvas = () => {
     setShowOffcanvas(!showOffcanvas);
@@ -78,6 +70,8 @@ const Schedule: React.FC = () => {
         <button
           className="btn-event hover:bg-sky-800"
           onClick={() => {
+            const userId = localStorage.getItem("userId");
+
             if (!userId) {
               alert("Hãy đăng nhập để sử dụng chức năng này.");
               return;
@@ -92,7 +86,7 @@ const Schedule: React.FC = () => {
           show={showOffcanvas}
           onHide={toggleOffcanvas}
           selectedEvent={selectedEvent}
-          refreshEvents={getSchedule}
+          refreshEvent={getSchedule}
         />
       </div>
       <Calendar

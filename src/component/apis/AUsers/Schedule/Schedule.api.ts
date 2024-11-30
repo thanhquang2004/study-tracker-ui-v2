@@ -18,13 +18,13 @@ export default {
         return response.data.result;
       });
   },
-  updateSchedule(id: number, data: IEvent): Promise<IEvent> {
+  updateSchedule(id: string, data: IEvent): Promise<IEvent> {
     return apiService.put(`/schedules/${id}`, data).then((response) => {
       console.log("Event updated:", response);
       return response.data;
     });
   },
-  deleteCategory(id: number): Promise<void> {
+  deleteSchedule(id: string): Promise<void> {
     return apiService.delete(`/schedules/${id}`).then((response) => {
       console.log("Event deleted:", response);
     });

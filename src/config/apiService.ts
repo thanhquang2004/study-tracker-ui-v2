@@ -15,20 +15,6 @@ export const apiService = axios.create({
 apiService.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("accessToken");
-    console.log("Token:", accessToken);
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-apiService.interceptors.request.use(
-  (config) => {
-    const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -40,14 +26,37 @@ apiService.interceptors.request.use(
 );
 
 apiService.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
-    if (error.response.status === 401) {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("username");
-      localStorage.removeItem("id");
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (!refreshToken) {
+          console.log("No refresh token available in localStorage.");
+          throw new Error("Refresh token is missing.");
+        }
+
+        const { data } = await apiService.post("/identity/auth/refresh", {
+          refreshToken,
+        });
+
+        console.log("Token refreshed:", data.result.token);
+
+        localStorage.setItem("accessToken", data.result.token);
+        localStorage.setItem("expiryTime", data.result.expiryTime);
+
+        originalRequest.headers.Authorization = `Bearer ${data.result.token}`;
+        return apiService(originalRequest);
+      } catch (refreshError) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("expiryTime");
+
+        return Promise.reject(refreshError);
+      }
     }
     return Promise.reject(error);
   }
