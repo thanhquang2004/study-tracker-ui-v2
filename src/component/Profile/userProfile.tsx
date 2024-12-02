@@ -3,6 +3,7 @@ import { IUser } from "../apis/AUsers/Auth/Auth.interface";
 import userApi from "../apis/AUsers/Auth/Auth.api";
 import { Avatar, Card, Col, Descriptions, Row, Typography } from "antd";
 import { IdcardOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import LoadingScreen from "../Loader/Loader";
 
 const { Title } = Typography;
 
@@ -84,7 +85,7 @@ const UserProfile: React.FC = () => {
           </Descriptions>
         </>
       ) : (
-        <p style={{ textAlign: "center", margin: 20 }}>Loading...</p>
+        <LoadingScreen />
       )}
     </Card>
   );

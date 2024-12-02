@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 
-export default function Component() {
+export default function LoadingScreen() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-gray-200">
+    <div className="flex flex-col items-center justify-center min-h-screen from-gray-100 to-gray-200">
       <motion.div
         className="relative w-32 h-32 mb-8"
         animate={{

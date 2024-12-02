@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useGetRoadmap } from "../../hooks/useGetRoadmap";
 
 const firstQuestion = {
-  nextQuestion: "What do you want to study?",
+  nextQuestion: "What do you want to learn?",
   info: "Want to study",
   suggestAnswer: [],
 };

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { List, Card, Button, Modal, Typography, message, Tooltip } from "antd";
 import { DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { RoadmapData } from "../../types/RoadmapData.type";
+import { Link, useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 const { confirm } = Modal;
@@ -18,6 +19,7 @@ export default function UserRoadmaps({
   onDeleteRoadmap,
 }: UserRoadmapsProps) {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const showDeleteConfirm = (roadmap: RoadmapData) => {
     confirm({
@@ -53,7 +55,11 @@ export default function UserRoadmaps({
           <List.Item>
             <Tooltip title={roadmap.title} placement="top">
               <Card
-                title={roadmap.title}
+                title={
+                  <div onClick={() => navigate(`/roadmap/${roadmap.id}`)}>
+                    {roadmap.title}
+                  </div>
+                }
                 extra={
                   <Button
                     type="text"
@@ -63,7 +69,7 @@ export default function UserRoadmaps({
                     loading={loading}
                   />
                 }
-                className="h-full"
+                className="h-full cursor-pointer border-blue-500"
               >
                 <Text type="secondary">
                   Created: {new Date(roadmap.createdAt).toLocaleDateString()}

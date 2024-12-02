@@ -5,6 +5,8 @@ import { RoadmapData } from "../../types/RoadmapData.type";
 const { Title, Paragraph } = Typography;
 
 function RoadmapDetail({ roadmapData }: { roadmapData: RoadmapData }) {
+
+
   if (!roadmapData) {
     return (
       <div className="container mx-auto px-4 py-8">
